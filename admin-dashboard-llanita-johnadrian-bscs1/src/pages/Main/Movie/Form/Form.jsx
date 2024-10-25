@@ -32,7 +32,7 @@ const Form = () => {
           console.log(response.data.results);
         })
         .catch((error) => {
-          console.error('Error fetching movie data:', error);
+          console.error('Error fetching movie data:', error); //#4
         });
     },
     [query]
@@ -59,8 +59,8 @@ const Form = () => {
         isFeatured: 0,
       };
 
-      const method = movieId ? 'patch' : 'post'; 
-      const url = movieId ? `/movies/${movieId}` : '/movies';
+      const method = movieId ? 'patch' : 'post'; //#1
+      const url = movieId ? `/movies/${movieId}` : '/movies'; //#1
 
       axios({
         method: method,
@@ -72,15 +72,15 @@ const Form = () => {
       })
         .then((saveResponse) => {
           alert('Success');
-          navigate('/main/movies');
+          navigate('/main/movies'); //#5
         })
         .catch((error) => {
-          alert('An error occurred: ' + error);
+          alert('An error occurred: ' + error); //#4
         });
     }
   };
 
-  // Handle input changes in form
+  
   const handleInputChange = (e, field) => {
     setSelectedMovie({
       ...selectedMovie,
@@ -88,7 +88,7 @@ const Form = () => {
     });
   };
 
-  // Fetch movie details if movieId is provided (for edit functionality)
+  
   useEffect(() => {
     if (movieId) {
       axios.get(`/movies/${movieId}`).then((response) => {
@@ -142,7 +142,7 @@ const Form = () => {
                 </p>
               ))}
             </div>
-            {/* Pagination  */}
+            {/* Pagination  #3 */} 
             <div className="pagination">
               <button onClick={handlePrevPage} disabled={currentPage === 1}>
                 Previous
@@ -176,6 +176,7 @@ const Form = () => {
             <input
               type="text"
               value={selectedMovie ? selectedMovie.original_title : ''}
+              //#2
               onChange={(e) => handleInputChange(e, 'original_title')}
             />
           </div>
@@ -184,6 +185,7 @@ const Form = () => {
             <textarea
               rows={10}
               value={selectedMovie ? selectedMovie.overview : ''}
+              //#2
               onChange={(e) => handleInputChange(e, 'overview')}
             />
           </div>
@@ -192,6 +194,7 @@ const Form = () => {
             <input
               type="text"
               value={selectedMovie ? selectedMovie.popularity : ''}
+              //#2
               onChange={(e) => handleInputChange(e, 'popularity')}
             />
           </div>
@@ -200,6 +203,7 @@ const Form = () => {
             <input
               type="text"
               value={selectedMovie ? selectedMovie.release_date : ''}
+              //#2
               onChange={(e) => handleInputChange(e, 'release_date')}
             />
           </div>
@@ -208,6 +212,7 @@ const Form = () => {
             <input
               type="text"
               value={selectedMovie ? selectedMovie.vote_average : ''}
+              //#2
               onChange={(e) => handleInputChange(e, 'vote_average')}
             />
           </div>
