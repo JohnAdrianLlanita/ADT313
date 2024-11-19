@@ -36,14 +36,10 @@ const Lists = () => {
             tempLists.splice(index, 1);
             setLists(tempLists);
           }
+
           //update list by requesting again to api
           // getMovies();
-        })
-        .catch((error) => { //#4
-          console.log(error)
-          alert(error)
-      });
-        
+        });
     }
   };
 
