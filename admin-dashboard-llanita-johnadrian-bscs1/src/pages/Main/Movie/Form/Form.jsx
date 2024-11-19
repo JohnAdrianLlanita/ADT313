@@ -2,18 +2,21 @@ import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import './Form.css';
+
 const Form = () => {
   const [query, setQuery] = useState('');
   const [searchedMovieList, setSearchedMovieList] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(undefined);
   const [movie, setMovie] = useState(undefined);
+  const [currentPage, setCurrentPage] = useState(1); 
+  const [totalPages, setTotalPages] = useState(1); 
   const navigate = useNavigate();
   let { movieId } = useParams();
 
   const handleSearch = useCallback(() => {
     axios({
       method: 'get',
-      url: `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&language=en-US&page=1`,
+      url: `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&language=en-US&page=${currentPage}`,
       headers: {
         Accept: 'application/json',
         Authorization:
@@ -21,7 +24,12 @@ const Form = () => {
       },
     }).then((response) => {
       setSearchedMovieList(response.data.results);
+      setTotalPages(response.data.total_pages); 
+      setCurrentPage(currentPage);
       console.log(response.data.results);
+    })
+    .catch((error) => {
+      console.error('Error fetching movie data:', error); //#4
     });
   }, [query]);
 
@@ -33,7 +41,6 @@ const Form = () => {
     const accessToken = localStorage.getItem('accessToken');
     console.log(accessToken);
     if (selectedMovie === undefined) {
-      //add validation
       alert('Please search and select a movie.');
     } else {
       const data = {
@@ -47,10 +54,12 @@ const Form = () => {
         posterPath: `https://image.tmdb.org/t/p/original/${selectedMovie.poster_path}`,
         isFeatured: 0,
       };
+      const method = movieId ? 'patch' : 'post'; //#1
+      const url = movieId ? `/movies/${movieId}` : '/movies'; //#1
 
-      const request = axios({
-        method: 'post',
-        url: '/movies',
+      axios({
+        method: method,
+        url: url,
         data: data,
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -59,9 +68,18 @@ const Form = () => {
         .then((saveResponse) => {
           console.log(saveResponse);
           alert('Success');
+          navigate('/main/movies'); //#5
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {
+          alert('An error occurred: ' + error); //#4
+        });
     }
+  };
+  const handleInputChange = (e, field) => {
+    setSelectedMovie({
+      ...selectedMovie,
+      [field]: e.target.value,
+    });
   };
 
   //create a form change/validation
@@ -83,7 +101,20 @@ const Form = () => {
         console.log(response.data);
       });
     }
-  }, []);
+  },  [movieId]);
+
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      handleSearch(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      handleSearch(currentPage + 1);
+    }
+  };
 
   return (
     <>
@@ -107,6 +138,21 @@ const Form = () => {
                 </p>
               ))}
             </div>
+             {/* Pagination  #3 */} 
+             <div className="pagination">
+              <button onClick={handlePrevPage} disabled={currentPage === 1}>
+                Previous
+              </button>
+              <span>
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={handleNextPage}
+                disabled={currentPage === totalPages}
+              >
+                Next
+              </button>
+          </div>
           </div>
           <hr />
         </>
@@ -127,6 +173,8 @@ const Form = () => {
             <input
               type='text'
               value={selectedMovie ? selectedMovie.original_title : ''}
+              //#2
+              onChange={(e) => handleInputChange(e, 'original_title')}
             />
           </div>
           <div className='field'>
@@ -134,6 +182,8 @@ const Form = () => {
             <textarea
               rows={10}
               value={selectedMovie ? selectedMovie.overview : ''}
+              //#2
+              onChange={(e) => handleInputChange(e, 'overview')}
             />
           </div>
 
@@ -142,6 +192,8 @@ const Form = () => {
             <input
               type='text'
               value={selectedMovie ? selectedMovie.popularity : ''}
+              //#2
+              onChange={(e) => handleInputChange(e, 'popularity')}
             />
           </div>
 
@@ -150,6 +202,8 @@ const Form = () => {
             <input
               type='text'
               value={selectedMovie ? selectedMovie.release_date : ''}
+              //#2
+              onChange={(e) => handleInputChange(e, 'release_date')}
             />
           </div>
 
@@ -158,6 +212,8 @@ const Form = () => {
             <input
               type='text'
               value={selectedMovie ? selectedMovie.vote_average : ''}
+              //#2
+              onChange={(e) => handleInputChange(e, 'vote_average')}
             />
           </div>
 
@@ -195,7 +251,7 @@ const Form = () => {
             </ul>
           </nav>
 
-          <Outlet />
+          <Outlet context={{ movieId }} />
         </div>
       )}
     </>
