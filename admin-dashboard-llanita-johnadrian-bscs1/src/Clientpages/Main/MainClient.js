@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import './Main.css';
+import './MainClient.css';
 
 function MainClient() {
   const accessToken = localStorage.getItem('accessToken');
@@ -19,7 +19,7 @@ function MainClient() {
     }
   }, []);
   return (
-    <div className='Main'>
+    <div className='MainClient'>
       <div className='container'>
         <div className='navigation'>
           <ul>

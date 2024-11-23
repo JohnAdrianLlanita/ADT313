@@ -22,7 +22,7 @@ function Main() {
   return (
     <div className='Main'>
       <div className='container'>
-        <div className='navigation'>
+        <div className='navigation2'>
           <ul>
             {/* <li>
               <a href='/main/dashboard'>Dashboard</a>

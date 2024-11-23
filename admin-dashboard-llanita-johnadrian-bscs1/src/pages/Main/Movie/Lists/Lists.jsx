@@ -2,10 +2,19 @@ import { useNavigate } from 'react-router-dom';
 import './Lists.css';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useOutletContext } from 'react-router-dom';
+
 const Lists = () => {
   const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
   const [lists, setLists] = useState([]);
+
+  const { setMovieData } = useOutletContext();
+
+  const updateMovieData = (movie) => {
+    // Update the movie data
+    setMovieData(movie);
+  };
 
   const getMovies = () => {
     //get the movies from the api or database
@@ -66,7 +75,7 @@ const Lists = () => {
           </thead>
           <tbody>
             {lists.map((movie) => (
-              <tr>
+              <tr onClick={() => updateMovieData(movie)}>
                 <td>{movie.id}</td>
                 <td>{movie.title}</td>
                 <td>

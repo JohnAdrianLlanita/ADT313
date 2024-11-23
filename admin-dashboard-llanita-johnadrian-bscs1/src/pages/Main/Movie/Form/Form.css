@@ -1,32 +1,31 @@
-.searched-movie {
-  max-height: 200px;
-  overflow-y: auto;
-}
-.search-container p:hover {
-  background-color: lightblue;
+/* Adjusted poster image size for search results and form */
+.suggested-movie img {
+  width: 120px;  /* Set a smaller width */
+  height: 180px; /* Set a proportional height */
+  object-fit: cover; /* Ensure the aspect ratio is maintained */
+  border-radius: 8px;
 }
 
 .poster-image {
-  width: 150px;
-  height: auto;
+  width: 200px; /* Adjust the width for the selected movie poster */
+  height: 300px; /* Adjust the height proportionally */
+  object-fit: cover;
+  border-radius: 8px;
 }
 
-.container {
-  overflow: auto;
+/* Optional: Adjust the layout for search result cards */
+.suggested-movie {
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  max-width: 140px;  /* Control the width of each movie card */
+  text-align: center;
+  transition: transform 0.3s ease;
 }
 
-nav {
-  margin-top: 2rem;
-}
-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-nav li {
-  display: inline;
-  border: solid;
-  border-width: 1px 1px 0 1px;
-  margin: 0 5px 0 0;
+.suggested-movie:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
