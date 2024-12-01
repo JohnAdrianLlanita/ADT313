@@ -27,12 +27,18 @@ function Main() {
             {/* <li>
               <a href='/main/dashboard'>Dashboard</a>
             </li> */}
+            
+              <a className='title'>
+              Cinephora
+              </a>
+            
             <li>
               <a href='/main/movies'>Movies</a>
             </li>
             <li className='logout'>
               <a onClick={handleLogout}>Logout</a>
             </li>
+            
           </ul>
         </div>
         <div className='outlet'>

@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
-const CastAndCrew = ({ movieId }) => {
+const CastAndCrews = () => {
+  const { movieId } = useParams(); 
   const [members, setMembers] = useState([]);
   const [newMember, setNewMember] = useState({ name: "", role: "" });
   const [loading, setLoading] = useState(false); // Track loading state
+
+  console.log(members);
 
   // Fetch existing members
   useEffect(() => {
@@ -13,7 +17,7 @@ const CastAndCrew = ({ movieId }) => {
     const fetchMembers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/movies/${movieId}/cast-and-crew`);
+        const response = await axios.get(`/credits`);
         setMembers(response.data);
       } catch (error) {
         console.error("Error fetching cast & crew:", error);
@@ -51,14 +55,18 @@ const CastAndCrew = ({ movieId }) => {
 
     try {
       setLoading(true);
-      const data = { movieId, name: newMember.name, role: newMember.role };
-      const response = await axios.post("/casts", data, {
+      const data = { movieId, name: newMember.name, characterName: newMember.role };
+      
+      console.log(data)
+      
+      const response = await axios.post("/credits", data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-
-      setMembers([...members, response.data]); // Append the new member to the list
+    
+      console.log("New member added:", response); // Log the API response
+      setMembers([...members, response.data]); // Append the full cast record
       setNewMember({ name: "", role: "" }); // Reset the input fields
       alert("Member added successfully!");
     } catch (error) {
@@ -67,6 +75,7 @@ const CastAndCrew = ({ movieId }) => {
     } finally {
       setLoading(false);
     }
+    
   };
 
   // Delete a member
@@ -136,4 +145,4 @@ const CastAndCrew = ({ movieId }) => {
   );
 };
 
-export default CastAndCrew;
+export default CastAndCrews;

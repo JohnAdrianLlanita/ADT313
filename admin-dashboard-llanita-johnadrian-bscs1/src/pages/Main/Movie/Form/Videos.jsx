@@ -1,53 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from "react";
+import { useOutletContext } from "react-router-dom";
 
-const Videos = ({ movieId }) => {
-  const [videos, setVideos] = useState([]);
-  const [newVideo, setNewVideo] = useState('');
-
-  useEffect(() => {
-    axios
-      .get(`/movies/${movieId}/videos`)
-      .then((response) => setVideos(response.data))
-      .catch((error) => console.error('Error fetching videos:', error));
-  }, [movieId]);
-
-  const addVideo = () => {
-    if (!newVideo) return alert('Video URL is required');
-    axios
-      .post(`/movies/${movieId}/videos`, { url: newVideo })
-      .then((response) => setVideos([...videos, response.data]))
-      .catch((error) => console.error('Error adding video:', error));
-    setNewVideo('');
-  };
-
-  const deleteVideo = (id) => {
-    axios
-      .delete(`/movies/${movieId}/videos/${id}`)
-      .then(() => setVideos(videos.filter((video) => video.id !== id)))
-      .catch((error) => console.error('Error deleting video:', error));
-  };
+const Videos = () => {
+  const { videos, setSelectedVideo } = useOutletContext();
 
   return (
-    <div>
-      <h2>Videos</h2>
-      <input
-        type="text"
-        placeholder="Video URL"
-        value={newVideo}
-        onChange={(e) => setNewVideo(e.target.value)}
-      />
-      <button onClick={addVideo}>Add</button>
-      <ul>
-        {videos.map((video) => (
-          <li key={video.id}>
-            <a href={video.url} target="_blank" rel="noopener noreferrer">
-              {video.url}
-            </a>
-            <button onClick={() => deleteVideo(video.id)}>Delete</button>
-          </li>
-        ))}
-      </ul>
+    <div className="videosMainCont">
+      {videos && videos.length > 0 ? (
+        videos.map((video) => (
+          <div className="videosCont" key={video.id}>
+            <p>{video.name}</p>
+            <div className="videolist">
+              <div className="video-preview">
+                <iframe
+                  width="280"
+                  height="158"
+                  src={`https://www.youtube.com/embed/${video.key}`}
+                  title={video.name}
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              </div>
+              <button
+                onClick={() => {
+                  setSelectedVideo(video);
+                  alert("Successfully selected a video!");
+                }}
+              >
+                Select Video
+              </button>
+            </div>
+          </div>
+        ))
+      ) : (
+        <p>No videos found</p>
+      )}
     </div>
   );
 };

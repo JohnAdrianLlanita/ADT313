@@ -38,7 +38,7 @@ const Home = () => {
 
   return (
     <div className='main-container'>
-      <h1 className='page-title'>Movies</h1>
+      <span className='page-title'>Movies</span>
       {featuredMovie && movieList.length ? (
         <div className='featured-list-container'>
           <div

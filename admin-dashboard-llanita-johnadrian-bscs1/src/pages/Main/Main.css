@@ -11,20 +11,22 @@
 }
 .Main .container .outlet {
   flex-grow: 3;
-  padding: 1rem;
   overflow-y: auto;
 }
 .Main .container .navigation2 {
   height: 80px;
   background-color: #15171b;
   width: 100%;
+  padding:10px;
 }
+
 .Main .container .navigation2 ul {
   list-style: none;
   overflow: hidden;
   padding: 0;
   margin: 0;
   display: flex;
+  flex-direction: row;
 }
 
 .Main .container .navigation2 ul li {
@@ -39,12 +41,12 @@
 }
 .Main .container .navigation2 ul li a {
   text-decoration: none;
-  color: #ffffff;
+  color: darkslateblue;
 }
 .Main .container .navigation2 ul li.active a,
 .Main .container .navigation2 ul li:hover a {
   text-decoration: none;
-  color: white;
+  color: mediumpurple;
 }
 .Main .container .navigation2 ul li.active,
 .Main .container .navigation2 ul li:hover {
@@ -59,3 +61,30 @@
   cursor: pointer;
   justify-self: end;
 }
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 90px;
+  color:black;
+  font-size: 38px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 10px;
+  font-family: serif;
+
+  /* Animated gradient background */
+  background: linear-gradient(270deg, purple,darkslateblue,blueviolet,darkorchid, darkorchid,blueviolet ,darkslateblue,purple);
+  background-size: 400% 400%;
+  animation: gradientAnimation 6s ease infinite;
+
+}
+
+

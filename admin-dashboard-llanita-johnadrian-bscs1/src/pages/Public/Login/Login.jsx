@@ -74,7 +74,7 @@ function Login() {
       <div className='main-container'>
         <form>
           <div className='form-container'>
-            <h3>Login</h3>
+            <h3 className='LoginText'>Login</h3>
 
             {error && <span className='login errors'>{error}</span>}
             <div>

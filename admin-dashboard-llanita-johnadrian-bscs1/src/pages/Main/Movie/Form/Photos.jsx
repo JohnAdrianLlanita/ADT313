@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const Photos = ({ movieId }) => {
   const [photos, setPhotos] = useState([]);
-  const [newPhoto, setNewPhoto] = useState('');
+  const [selectedFile, setSelectedFile] = useState(null);
 
   useEffect(() => {
     axios
@@ -12,13 +12,24 @@ const Photos = ({ movieId }) => {
       .catch((error) => console.error('Error fetching photos:', error));
   }, [movieId]);
 
-  const addPhoto = () => {
-    if (!newPhoto) return alert('Photo URL is required');
+  const uploadPhoto = () => {
+    if (!selectedFile) return alert('Please select a file to upload');
+    
+    // Create FormData object to hold the file
+    const formData = new FormData();
+    formData.append('photo', selectedFile);
+
     axios
-      .post(`/movies/${movieId}/photos`, { url: newPhoto })
-      .then((response) => setPhotos([...photos, response.data]))
-      .catch((error) => console.error('Error adding photo:', error));
-    setNewPhoto('');
+      .post(`/movies/${movieId}/photos`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((response) => {
+        setPhotos([...photos, response.data]);
+        setSelectedFile(null); // Clear the selected file after successful upload
+      })
+      .catch((error) => console.error('Error uploading photo:', error));
   };
 
   const deletePhoto = (id) => {
@@ -32,12 +43,11 @@ const Photos = ({ movieId }) => {
     <div>
       <h2>Photos</h2>
       <input
-        type="text"
-        placeholder="Photo URL"
-        value={newPhoto}
-        onChange={(e) => setNewPhoto(e.target.value)}
+        type="file"
+        accept="image/*"
+        onChange={(e) => setSelectedFile(e.target.files[0])}
       />
-      <button onClick={addPhoto}>Add</button>
+      <button onClick={uploadPhoto}>Upload</button>
       <ul>
         {photos.map((photo) => (
           <li key={photo.id}>

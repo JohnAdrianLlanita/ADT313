@@ -1,0 +1,78 @@
+.movie-view {
+    font-family: Arial, sans-serif;
+    color: #fff;
+    background-color: #141414;
+    padding: 20px;
+  }
+  
+  .banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .movie-poster {
+    max-width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    margin-right: 20px;
+  }
+  
+  .banner-info {
+    max-width: 70%;
+    color: #fff;
+  }
+  
+  .movie-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .movie-overview {
+    font-size: 1.2rem;
+    line-height: 1.6;
+  }
+  
+  .cast-crew,
+  .movie-videos,
+  .movie-photos {
+    margin-top: 30px;
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    color: mediumpurple;
+  }
+  
+  .cast-member {
+    font-size: 1.2rem;
+    margin: 5px 0;
+    color: #bbb;
+  }
+  
+  .movie-videos iframe {
+    width: 100%;
+    max-width: 600px;
+    height: 350px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+  }
+  
+  .movie-photos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .photo-item {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: cover;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  }
+  

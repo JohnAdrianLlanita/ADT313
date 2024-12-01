@@ -1,31 +1,211 @@
-/* Adjusted poster image size for search results and form */
-.suggested-movie img {
-  width: 120px;  /* Set a smaller width */
-  height: 180px; /* Set a proportional height */
-  object-fit: cover; /* Ensure the aspect ratio is maintained */
-  border-radius: 8px;
+/* General Styling */
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #121212; /* IMDb uses dark backgrounds for contrast */
+  margin: 0;
+  padding: 0;
+  color: #e6e6e6; /* Light gray text for readability */
 }
 
-.poster-image {
-  width: 200px; /* Adjust the width for the selected movie poster */
-  height: 300px; /* Adjust the height proportionally */
-  object-fit: cover;
-  border-radius: 8px;
+/* Form Heading */
+.create {
+  color: mediumpurple; /* IMDb's signature yellow */
+  font-weight: bold;
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-/* Optional: Adjust the layout for search result cards */
+/* Search Container */
+.search-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  color: #e6e6e6;
+  font-weight: bold;
+}
+
+.search-container input {
+  width: 300px;
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  background-color: #222;
+  color: #e6e6e6;
+  margin-right: 10px;
+}
+
+.search-container button {
+  padding: 10px 20px;
+  border: none;
+  background-color: mediumpurple;
+  color: #000;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.search-container button:hover {
+  background-color: darkslateblue;
+  transform: scale(1.05);
+}
+
+/* Search Results */
+.searched-movie p {
+  margin: 5px 0;
+  cursor: pointer;
+  color: rgb(210, 188, 255);
+  transition: color 0.2s ease;
+}
+
+.searched-movie p:hover {
+  color: darkslateblue;
+  text-decoration: underline;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+  gap: 15px;
+}
+
+.pagination button {
+  padding: 5px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #444;
+  color: #e6e6e6;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+  background-color: #555;
+}
+
+.pagination span {
+  font-weight: bold;
+  color: #e6e6e6;
+}
+
+/* Movie Card */
 .suggested-movie {
   margin: 10px;
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid #444;
   border-radius: 8px;
   cursor: pointer;
-  max-width: 140px;  /* Control the width of each movie card */
+  max-width: 140px;
   text-align: center;
-  transition: transform 0.3s ease;
+  background-color: #222;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: #e6e6e6;
 }
 
 .suggested-movie:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+/* Form Section */
+.center2 {
+  background-color: #1a1a1a;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  width: 350px;
+  margin: 0 auto;
+}
+
+.container-pic {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.poster-image {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid mediumpurple;
+}
+
+/* Form Fields */
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.field label {
+  color: mediumpurple;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #444;
+  border-radius: 5px;
+  background-color: #222;
+  color: #e6e6e6;
+  resize: none;
+}
+
+.field textarea {
+  height: 120px;
+}
+
+/* Save Button */
+.savebutton {
+  padding: 10px 40px;
+  border-radius: 5px;
+  background-color: mediumpurple;
+  font-weight: bold;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  margin-top: 20px;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-left:40px;
+}
+
+.savebutton:hover {
+  background-color: darkslateblue;
+  transform: scale(1.05);
+}
+
+/* Tabs for Edit Mode */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  list-style-type: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.tabs li {
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #222;
+  color: #e6e6e6;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.tabs li:hover {
+  background-color: mediumpurple;
+  color: #000;
+  transform: scale(1.05);
 }

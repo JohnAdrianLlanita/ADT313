@@ -10,8 +10,31 @@
 .table-container,
 .movie-lists {
   width: 100%;
+  color:mediumpurple;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .table-container {
   text-align: center;
+}
+.editbutton{
+  background-color: lightgreen;
+  font-size: 17px;
+  font-weight: bold;
+}
+.deletebutton{
+  background-color: lightpink;
+  font-size: 17px;
+  font-weight: bold;
+}
+.createbutton{
+  background-color: mediumpurple;
+  font-size: 17px;
+  font-weight: bold;
+}
+.castcrewbutton{
+  background-color: lightblue;
+  font-size: 17px;
+  font-weight: bold;
 }

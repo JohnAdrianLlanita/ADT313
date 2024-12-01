@@ -19,6 +19,7 @@ const Lists = () => {
   const getMovies = () => {
     //get the movies from the api or database
     axios.get('/movies').then((response) => {
+      console.log(response)
       setLists(response.data);
     });
   };
@@ -53,50 +54,76 @@ const Lists = () => {
   };
 
   return (
-    <div className='lists-container'>
-      <div className='create-container'>
-        <button
-          type='button'
-          onClick={() => {
-            navigate('/main/movies/form');
-          }}
-        >
-          Create new
-        </button>
-      </div>
-      <div className='table-container'>
-        <table className='movie-lists'>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lists.map((movie) => (
-              <tr onClick={() => updateMovieData(movie)}>
-                <td>{movie.id}</td>
-                <td>{movie.title}</td>
-                <td>
-                  <button
-                    type='button'
-                    onClick={() => {
-                      navigate('/main/movies/form/' + movie.id);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button type='button' onClick={() => handleDelete(movie.id)}>
-                    Delete
-                  </button>
-                </td>
+    <>
+      <div className='lists-container'>
+        <div className='create-container'>
+          <button
+            className='createbutton'
+            type='button'
+            onClick={() => {
+              navigate('/main/movies/form');
+            }}
+          >
+            Create new
+          </button>
+        </div>
+        <div className='table-container'>
+          <table className='movie-lists'>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {lists.map((movie, i) => (
+                <tr
+                  onClick={() => updateMovieData(movie)}
+                  key={movie.id}
+                >
+                  <td>{i}</td>
+                  <td style={{ cursor: 'pointer' }}>{movie.title}</td>
+                  <td>
+                    <button
+                      className='editbutton'
+                      type='button'
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent the row click from triggering
+                        navigate(`/main/movies/form/${movie.id}`);
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className='deletebutton'
+                      type='button'
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent the row click from triggering
+                        handleDelete(movie.id);
+                      }}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      className='castcrewbutton'
+                      type='button'
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent the row click from triggering
+                        navigate(`${movie.id}/cast-and-crews`);
+                      }}
+                    >
+                      View Cast & Crew
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+    </>
   );
 };
 

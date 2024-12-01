@@ -1,18 +1,30 @@
-.featured-movie-container {
+.main-container {
+  height: fit-content;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  background-color: black;
 }
-.page-title {
+
+.page-title{
   font-size: 4.5rem;
+  font-weight: bold;
+  color:mediumpurple;
+  text-align: center;
 }
 .list-container {
   display: flex;
   flex-wrap: wrap;
   flex: 1;
   gap: 1rem;
+  justify-content: center;
 }
 
 .featured-list-container {
   width: 100%;
-  margin-bottom: 5rem;
+  /* margin-bottom: 5rem; */
   aspect-ratio: 16 / 9;
 }
 .featured-backdrop {

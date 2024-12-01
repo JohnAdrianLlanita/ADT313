@@ -11,27 +11,36 @@ const Form = () => {
   const [currentPage, setCurrentPage] = useState(1); 
   const [totalPages, setTotalPages] = useState(1); 
   const navigate = useNavigate();
+  const [videos, setVideos] = useState([]); // State for videos
+const [selectedVideo, setSelectedVideo] = useState([]); // State for the selected video
+
   let { movieId } = useParams();
 
-  const handleSearch = useCallback(() => {
-    axios({
-      method: 'get',
-      url: `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&language=en-US&page=${currentPage}`,
-      headers: {
-        Accept: 'application/json',
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNGJkNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI',
-      },
-    }).then((response) => {
-      setSearchedMovieList(response.data.results);
-      setTotalPages(response.data.total_pages); 
-      setCurrentPage(currentPage);
-      console.log(response.data.results);
-    })
-    .catch((error) => {
-      console.error('Error fetching movie data:', error); //#4
-    });
-  }, [query]);
+  
+  const handleSearch = useCallback(
+    (page = 1) => { // Default to page 1 if no argument is passed
+      axios({
+        method: 'get',
+        url: `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&language=en-US&page=${page}`,
+        headers: {
+          Accept: 'application/json',
+          Authorization:
+            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNGJkNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI',
+        },
+      })
+        .then((response) => {
+          setSearchedMovieList(response.data.results);
+          setTotalPages(response.data.total_pages);
+          setCurrentPage(page); // Update current page
+          console.log(response.data.results);
+        })
+        .catch((error) => {
+          console.error('Error fetching movie data:', error);
+        });
+    },
+    [query] // Removed `currentPage` dependency
+  );
+  
 
   const handleSelectMovie = (movie) => {
     setSelectedMovie(movie);
@@ -45,7 +54,7 @@ const Form = () => {
     } else {
       const data = {
         tmdbId: selectedMovie.id,
-        title: selectedMovie.title,
+        title: selectedMovie.original_title,
         overview: selectedMovie.overview,
         popularity: selectedMovie.popularity,
         releaseDate: selectedMovie.release_date,
@@ -54,8 +63,8 @@ const Form = () => {
         posterPath: `https://image.tmdb.org/t/p/original/${selectedMovie.poster_path}`,
         isFeatured: 0,
       };
-      const method = movieId ? 'patch' : 'post'; //#1
-      const url = movieId ? `/movies/${movieId}` : '/movies'; //#1
+      const method = movieId ? 'patch' : 'post';
+      const url = movieId ? `/movies/${movieId}` : '/movies';
 
       axios({
         method: method,
@@ -68,13 +77,14 @@ const Form = () => {
         .then((saveResponse) => {
           console.log(saveResponse);
           alert('Success');
-          navigate('/main/movies'); //#5
+          navigate('/main/movies');
         })
         .catch((error) => {
-          alert('An error occurred: ' + error); //#4
+          alert('An error occurred: ' + error);
         });
     }
   };
+
   const handleInputChange = (e, field) => {
     setSelectedMovie({
       ...selectedMovie,
@@ -82,8 +92,6 @@ const Form = () => {
     });
   };
 
-  //create a form change/validation
-  //create a new handler for update
   useEffect(() => {
     if (movieId) {
       axios.get(`/movies/${movieId}`).then((response) => {
@@ -94,6 +102,7 @@ const Form = () => {
           overview: response.data.overview,
           popularity: response.data.popularity,
           poster_path: response.data.posterPath,
+          backdrop_path: response.data.backdropPath,
           release_date: response.data.releaseDate,
           vote_average: response.data.voteAverage,
         };
@@ -101,159 +110,162 @@ const Form = () => {
         console.log(response.data);
       });
     }
-  },  [movieId]);
-
+  }, [movieId]);
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
-      handleSearch(currentPage - 1);
+      setCurrentPage((prevPage) => {
+        const newPage = prevPage - 1;
+        handleSearch(newPage);
+        return newPage;
+      });
     }
   };
 
   const handleNextPage = () => {
     if (currentPage < totalPages) {
-      handleSearch(currentPage + 1);
+      setCurrentPage((prevPage) => {
+        const newPage = prevPage + 1;
+        handleSearch(newPage);
+        return newPage;
+      });
     }
   };
 
   return (
     <>
-      <h1>{movieId !== undefined ? 'Edit ' : 'Create '} Movie</h1>
+      <div className='center'>
+        <h1 className='create'>{movieId !== undefined ? 'Edit ' : 'Create '} Movie</h1>
 
-      {movieId === undefined && (
-        <>
-          <div className='search-container'>
-            Search Movie:{' '}
-            <input
-              type='text'
-              onChange={(event) => setQuery(event.target.value)}
-            />
-            <button type='button' onClick={handleSearch}>
-              Search
-            </button>
-            <div className='searched-movie'>
-              {searchedMovieList.map((movie) => (
-                <p onClick={() => handleSelectMovie(movie)}>
-                  {movie.original_title}
-                </p>
-              ))}
-            </div>
-             {/* Pagination  #3 */} 
-             <div className="pagination">
-              <button onClick={handlePrevPage} disabled={currentPage === 1}>
-                Previous
+        {movieId === undefined && (
+          <>
+            <div className='search-container'>
+  Search Movie:{' '}
+  <input
+    type='text'
+    onChange={(event) => setQuery(event.target.value)}
+  />
+  <button type='button' onClick={() => handleSearch(1)}> {/* Always starts from page 1 */}
+    Search
+  </button>
+  <div className='searched-movie'>
+    {searchedMovieList.map((movie) => (
+      <p key={movie.id} onClick={() => handleSelectMovie(movie)}>
+        {movie.original_title}
+      </p>
+    ))}
+  </div>
+  {/* Pagination */}
+  <div className="pagination">
+    <button className='prev' onClick={handlePrevPage} disabled={currentPage === 1}>
+      Previous
+    </button>
+    <span>
+      Page {currentPage} of {totalPages}
+    </span>
+    <button className='next'
+      onClick={handleNextPage}
+      disabled={currentPage === totalPages}
+    >
+      Next
+    </button>
+  </div>
+</div>
+
+            <hr />
+          </>
+        )}
+        <div className='center2'>
+          <div className='container-pic'>
+            <form>
+              {selectedMovie ? (
+                <img
+                  className='poster-image'
+                  src={`https://image.tmdb.org/t/p/original/${selectedMovie.poster_path}`}
+                />
+              ) : (
+                ''
+              )}
+              <div className='field'>
+                Title:
+                <input className='titletext'
+                  type='text'
+                  value={selectedMovie ? selectedMovie.original_title : ''}
+                  onChange={(e) => handleInputChange(e, 'original_title')}
+                />
+              </div>
+              <div className='field'>
+                Overview:
+                <textarea className='textoverview'
+                  rows={10}
+                  value={selectedMovie ? selectedMovie.overview : ''}
+                  onChange={(e) => handleInputChange(e, 'overview')}
+                />
+              </div>
+              <div className='field'>
+                Popularity:
+                <input className='popularity'
+                  type='text'
+                  value={selectedMovie ? selectedMovie.popularity : ''}
+                  onChange={(e) => handleInputChange(e, 'popularity')}
+                />
+              </div>
+              <div className='field'>
+                Release Date:
+                <input className='date'
+                  type='text'
+                  value={selectedMovie ? selectedMovie.release_date : ''}
+                  onChange={(e) => handleInputChange(e, 'release_date')}
+                />
+              </div>
+              <div className='field'>
+                Vote Average:
+                <input className='vote'
+                  type='text'
+                  value={selectedMovie ? selectedMovie.vote_average : ''}
+                  onChange={(e) => handleInputChange(e, 'vote_average')}
+                />
+              </div>
+              <button className='savebutton' type='button' onClick={handleSave}>
+                Save
               </button>
-              <span>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                onClick={handleNextPage}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
+            </form>
           </div>
-          </div>
-          <hr />
-        </>
-      )}
-
-      <div className='container'>
-        <form>
-          {selectedMovie ? (
-            <img
-              className='poster-image'
-              src={`https://image.tmdb.org/t/p/original/${selectedMovie.poster_path}`}
-            />
-          ) : (
-            ''
-          )}
-          <div className='field'>
-            Title:
-            <input
-              type='text'
-              value={selectedMovie ? selectedMovie.original_title : ''}
-              //#2
-              onChange={(e) => handleInputChange(e, 'original_title')}
-            />
-          </div>
-          <div className='field'>
-            Overview:
-            <textarea
-              rows={10}
-              value={selectedMovie ? selectedMovie.overview : ''}
-              //#2
-              onChange={(e) => handleInputChange(e, 'overview')}
-            />
-          </div>
-
-          <div className='field'>
-            Popularity:
-            <input
-              type='text'
-              value={selectedMovie ? selectedMovie.popularity : ''}
-              //#2
-              onChange={(e) => handleInputChange(e, 'popularity')}
-            />
-          </div>
-
-          <div className='field'>
-            Release Date:
-            <input
-              type='text'
-              value={selectedMovie ? selectedMovie.release_date : ''}
-              //#2
-              onChange={(e) => handleInputChange(e, 'release_date')}
-            />
-          </div>
-
-          <div className='field'>
-            Vote Average:
-            <input
-              type='text'
-              value={selectedMovie ? selectedMovie.vote_average : ''}
-              //#2
-              onChange={(e) => handleInputChange(e, 'vote_average')}
-            />
-          </div>
-
-          <button type='button' onClick={handleSave}>
-            Save
-          </button>
-        </form>
-      </div>
-      {movieId !== undefined && selectedMovie && (
-        <div>
-          <hr />
-          <nav>
-            <ul className='tabs'>
-              <li
-                onClick={() => {
-                  navigate(`/main/movies/form/${movieId}/cast-and-crews`);
-                }}
-              >
-                Cast & Crews
-              </li>
-              <li
-                onClick={() => {
-                  navigate(`/main/movies/form/${movieId}/videos`);
-                }}
-              >
-                Videos
-              </li>
-              <li
-                onClick={() => {
-                  navigate(`/main/movies/form/${movieId}/photos`);
-                }}
-              >
-                Photos
-              </li>
-            </ul>
-          </nav>
-
-          <Outlet context={{ movieId }} />
         </div>
-      )}
+      </div>
+
+      {movieId && (
+  <div>
+    <hr />
+    <nav>
+      <ul className="tabs">
+        <li
+          onClick={() => {
+            navigate(`/main/movies/form/${movieId}/cast-and-crews`);
+          }}
+        >
+          Cast & Crews
+        </li>
+        <li
+          onClick={() => {
+            navigate(`/main/movies/form/${movieId}/videos`);
+          }}
+        >
+          Videos
+        </li>
+        <li
+          onClick={() => {
+            navigate(`/main/movies/form/${movieId}/photos`);
+          }}
+        >
+          Photos
+        </li>
+      </ul>
+    </nav>
+    <Outlet context={{ videos, setSelectedVideo }} />
+  </div>
+)}
+
     </>
   );
 };

@@ -16,6 +16,8 @@ import View from './Clientpages/Main/Movie/View/View';
 import CastandCrew from './pages/Main/Movie/Form/CastandCrew';
 import Photos from './pages/Main/Movie/Form/Photos';
 import Videos from './pages/Main/Movie/Form/Videos';
+import { CastAndCrew } from './pages/Main/Movie/Lists/CastAndCrew';
+import CastAndCrews from './pages/Main/Movie/Form/CastandCrew';
 
 
 const router = createBrowserRouter([
@@ -58,12 +60,16 @@ const router = createBrowserRouter([
             element: <Lists />,
           },
           {
+            path: '/main/movies/:movieId/cast-and-crews',
+            element: <CastAndCrew />,
+          },
+          {
             path: '/main/movies/form/:movieId?',
             element: <Form />,
             children: [
               {
                 path: '/main/movies/form/:movieId/cast-and-crews',
-                element: <CastandCrew />,
+                element: <CastAndCrews />,
               },
               {
                 path: '/main/movies/form/:movieId/photos',
@@ -73,8 +79,6 @@ const router = createBrowserRouter([
                 path: '/main/movies/form/:movieId/videos',
                 element: <Videos />,
               },
-              
-              
             ],
           },
         ],

@@ -1,61 +1,65 @@
-.Main {
+.MainClient {
   display: flex;
   overflow: hidden;
   max-height: 100vh;
 }
-.Main .container {
+.MainClient .container {
   display: flex;
   flex-direction: column;
   width: 100vw;
   height: 100vh;
 }
-.Main .container .outlet {
+.MainClient .container .outlet {
   flex-grow: 3;
-  padding: 1rem;
+  
   overflow-y: auto;
 }
-.Main .container .navigation {
+.MainClient .container .navigation {
   height: 80px;
-  background-color: #15171b;
+  background-color: mediumpurple;
   width: 100%;
 }
-.Main .container .navigation ul {
+.MainClient .container .navigation ul {
   list-style: none;
   overflow: hidden;
   padding: 0;
   margin: 0;
   display: flex;
+  flex-direction: row;
 }
 
-.Main .container .navigation ul li {
+.MainClient .container .navigation ul li {
   padding: 0px 60px;
   height: 80px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #61dafb;
+  color: #000000;
   font-weight: bold;
+  cursor: pointer;
 }
-.Main .container .navigation ul li a {
+.MainClient .container .navigation ul li a {
   text-decoration: none;
-  color: #61dafb;
+  color: #000000;
+  font-weight: bold;
+  font-size: 2rem;
 }
-.Main .container .navigation ul li.active a,
-.Main .container .navigation ul li:hover a {
+.MainClient .container .navigation ul li.active a,
+.MainClient .container .navigation ul li:hover a {
   text-decoration: none;
   color: white;
 }
-.Main .container .navigation ul li.active,
-.Main .container .navigation ul li:hover {
+.MainClient .container .navigation ul li.active,
+.MainClient .container .navigation ul li:hover {
   background: #353a43;
 }
-.Main .container .navigation ul li a {
+.MainClient .container .navigation ul li a {
   text-decoration: none;
 }
 
-.Main .container .navigation ul li.logout,
-.Main .container .navigation ul li.login {
+.MainClient .container .navigation ul li.logout,
+.MainClient .container .navigation ul li.login {
   cursor: pointer;
   justify-self: end;
 }
