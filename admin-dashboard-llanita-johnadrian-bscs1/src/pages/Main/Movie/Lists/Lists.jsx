@@ -8,7 +8,6 @@ const Lists = () => {
   const accessToken = localStorage.getItem('accessToken');
   const navigate = useNavigate();
   const [lists, setLists] = useState([]);
-
   const { setMovieData } = useOutletContext();
 
   const updateMovieData = (movie) => {

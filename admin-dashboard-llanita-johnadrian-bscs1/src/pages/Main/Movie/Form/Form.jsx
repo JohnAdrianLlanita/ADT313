@@ -13,9 +13,138 @@ const Form = () => {
   const navigate = useNavigate();
   const [videos, setVideos] = useState([]); // State for videos
 const [selectedVideo, setSelectedVideo] = useState([]); // State for the selected video
+const [photos, setPhotos] = useState([]);
+const [selectedPhoto, setSelectedPhoto] = useState([]);
+const [description, setDescription] = useState("");
 
   let { movieId } = useParams();
 
+  const handleAddVideo = async (movieId2) => {
+    const accessToken = localStorage.getItem("accessToken");
+    const videoData = {
+      movieId: movieId ? movieId : movieId2,
+      url: selectedVideo?.key
+        ? `https://www.youtube.com/embed/${selectedVideo.key}`
+        : "https://www.youtube.com/embed/not_available", 
+      name: selectedVideo?.name || "No video selected",
+      site: selectedVideo?.site || "YouTube",
+      videoKey: selectedVideo?.key || "not_available",
+      videoType: selectedVideo?.type || "placeholder",
+      official: selectedVideo?.official || false,
+    };
+  
+    try {
+      const response = await axios({
+        method: movieId ? "patch" : "post",
+        url: movieId ? `/videos/${movieId}` : "/videos",
+        data: videoData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log("Video added successfully:", response.data);
+      alert("Video added successfully!");
+      return true;
+    } catch (error) {
+      console.error("Error adding video:", error);
+      console.log('raw',selectedVideo);
+      alert("Failed to add video. Please try again.");
+      return false;
+    }
+  };
+  
+  const handleAddPhoto = async (movieId2) => {
+    console.log("Adding image for movieId:", movieId2);
+  
+    const accessToken = localStorage.getItem("accessToken");
+    // Get userId from localStorage or your auth state management
+    const userId = localStorage.getItem("userId"); // Add this line
+    
+    const imageData = {
+      movieId: movieId ? movieId : movieId2,
+      url: selectedPhoto?.file_path ? 
+        `https://image.tmdb.org/t/p/w500${selectedPhoto.file_path}` : "",
+      description: selectedPhoto?.height ?
+        `Height: ${selectedPhoto.height}, Aspect Ratio: ${selectedPhoto.aspect_ratio}` : "" // Added description field
+    };
+  
+    console.log("Sending image data:", imageData);
+  
+    try {
+      const response = await axios({
+        method: movieId ? "patch" : "post",
+        url: movieId ? `/photos/${movieId}` : "/photos",
+        data: imageData,
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+      });
+      console.log("Photos added successfully:", response.data);
+      alert("Photos added successfully!");
+      return true;
+    } catch (error) {
+      console.error("Error adding Photos:", error.response?.data || error.message);
+      alert("Failed to add Photos. Please try again.");
+      return false;
+    }
+  };
+
+  const fetchVideos = (tmdbId) => {
+    return axios
+      .get(
+        `https://api.themoviedb.org/3/movie/${tmdbId}/videos?language=en-US`,
+        {
+          headers: {
+            Authorization:
+            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNGJkNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI',
+        },
+        }
+      )
+      .then((response) => {
+        const videoResults = response.data.results;
+        setVideos(videoResults.length > 0 ? videoResults : []);
+      })
+      .catch((error) => {
+        console.error("Error fetching videos:", error);
+        setVideos([]);
+      });
+  };
+  const fetchPhotos = (tmdbId) => {
+    return axios
+      .get(
+        `https://api.themoviedb.org/3/movie/${tmdbId}/images?language=en-US`,
+        {
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNGJkNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI",
+            Accept: "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        // Log the entire response to see the structure
+        console.log("Full Image Response:", response.data);
+        
+        // Log the backdrops specifically
+        console.log("Backdrops:", response.data.backdrops);
+        
+        // Check if backdrops exist and log their content
+        if (response.data.backdrops && response.data.backdrops.length > 0) {
+          console.log("First Backdrop Details:", response.data.backdrops[0]);
+        }
+  
+        const imageResults = response.data.backdrops;
+        setPhotos(imageResults.length > 0 ? imageResults : "");
+        console.log("Images set to state:", imageResults);
+      })
+      .catch((error) => {
+        console.error("Error fetching Images:", error);
+        setPhotos(""); // Set to "" in case of error
+      });
+  };
+
+  
   
   const handleSearch = useCallback(
     (page = 1) => { // Default to page 1 if no argument is passed
@@ -44,46 +173,108 @@ const [selectedVideo, setSelectedVideo] = useState([]); // State for the selecte
 
   const handleSelectMovie = (movie) => {
     setSelectedMovie(movie);
+    
+    // Fetch both videos and images
+    Promise.all([
+      axios.get(
+        `https://api.themoviedb.org/3/movie/${movie.id}/videos?language=en-US`,
+        {
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNGJkNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI",
+          },
+        }
+      ),
+      axios.get(
+        `https://api.themoviedb.org/3/movie/${movie.id}/images`,
+        {
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNGJkNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI",
+          },
+        }
+      )
+    ])
+    .then(([videoResponse, imageResponse]) => {
+      const videoResults = videoResponse.data.results;
+      setVideos(videoResults.length > 0 ? videoResults : "");
+      console.log("Videos from TMDB:", videoResults);
+  
+      const backdrops = imageResponse.data.backdrops || [];
+      const imageResults = [...backdrops];
+      setPhotos(imageResults.length > 0 ? imageResults : "");
+      console.log("Images from TMDB:", imageResults);
+    })
+    .catch(error => {
+      console.error("Error fetching movie data:", error);
+    });
   };
 
-  const handleSave = () => {
-    const accessToken = localStorage.getItem('accessToken');
-    console.log(accessToken);
-    if (selectedMovie === undefined) {
-      alert('Please search and select a movie.');
-    } else {
-      const data = {
-        tmdbId: selectedMovie.id,
-        title: selectedMovie.original_title,
-        overview: selectedMovie.overview,
-        popularity: selectedMovie.popularity,
-        releaseDate: selectedMovie.release_date,
-        voteAverage: selectedMovie.vote_average,
-        backdropPath: `https://image.tmdb.org/t/p/original/${selectedMovie.backdrop_path}`,
-        posterPath: `https://image.tmdb.org/t/p/original/${selectedMovie.poster_path}`,
-        isFeatured: 0,
-      };
-      const method = movieId ? 'patch' : 'post';
-      const url = movieId ? `/movies/${movieId}` : '/movies';
+  const handleSave = async () => {
+    console.log(selectedVideo);
+    console.log(movieId);
+    if (videos && videos.length > 0 && (!selectedVideo || !selectedVideo.key)) {
+      alert("Videos are available. Please select a video before proceeding.");
+      return false; 
+    }
 
-      axios({
-        method: method,
-        url: url,
+    if (!videos || videos.length <= 0) {
+      alert("No videos found. Proceeding with empty video data.");
+    }
+
+    const accessToken = localStorage.getItem("accessToken");
+
+    if (!selectedMovie) {
+      alert("Please search and select a movie.");
+      return;
+    }
+
+    const data = {
+      tmdbId: selectedMovie.id,
+      title: selectedMovie.original_title,
+      overview: selectedMovie.overview,
+      popularity: selectedMovie.popularity,
+      releaseDate: selectedMovie.release_date,
+      voteAverage: selectedMovie.vote_average,
+      backdropPath: `https://image.tmdb.org/t/p/original/${selectedMovie.backdrop_path}`,
+      posterPath: `https://image.tmdb.org/t/p/original/${selectedMovie.poster_path}`,
+      isFeatured: 0,
+    };
+
+    try {
+      const response = await axios({
+        method: movieId ? "patch" : "post",
+        url: movieId ? `/movies/${movieId}` : "/movies",
         data: data,
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      })
-        .then((saveResponse) => {
-          console.log(saveResponse);
-          alert('Success');
-          navigate('/main/movies');
-        })
-        .catch((error) => {
-          alert('An error occurred: ' + error);
-        });
+      });
+      const newMovieId = movieId || response.data.id;
+      console.log("safjadsfdsgfdsfhdsbfj", movieId || "sd");
+      console.log("safjadsfdsgfdsfhdsbfj", newMovieId);
+      console.log("Movie saved successfully:", response.data);
+      alert("Movie saved successfully!");
+
+      const isVideoAdded = await handleAddVideo(newMovieId);
+      if (!isVideoAdded) {
+        alert("Video could not be added. Please try again.");
+        return;
+      }
+      const isPhotoAdded = await handleAddPhoto(newMovieId);
+if (!isPhotoAdded) {
+  alert("Photo could not be added. Please try again.");
+  return;
+}
+
+
+      navigate(`/main/movies`);
+    } catch (error) {
+      console.error("Error saving movie:", error);
+      alert("Failed to save the movie. Please try again.");
     }
   };
+  
 
   const handleInputChange = (e, field) => {
     setSelectedMovie({
@@ -102,15 +293,58 @@ const [selectedVideo, setSelectedVideo] = useState([]); // State for the selecte
           overview: response.data.overview,
           popularity: response.data.popularity,
           poster_path: response.data.posterPath,
-          backdrop_path: response.data.backdropPath,
           release_date: response.data.releaseDate,
           vote_average: response.data.voteAverage,
         };
         setSelectedMovie(tempData);
-        console.log(response.data);
-      });
-    }
-  }, [movieId]);
+        fetchVideos(tempData.id)
+        
+        const tmdbId = response.data.tmdbId;
+          
+        // Parallel fetching of videos and images
+        return Promise.all([
+          axios.get(
+            `https://api.themoviedb.org/3/movie/${tmdbId}/videos?language=en-US`,
+            {
+              headers: {
+                Authorization:
+                  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNGJkNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI",
+              },
+            }
+          ),
+          axios.get(
+            `https://api.themoviedb.org/3/movie/${tmdbId}/images`,
+            {
+              headers: {
+                Accept: "application/json",
+                Authorization:
+                  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI",
+              },
+            }
+          )
+        ]);
+      })
+      .then(([videoResponse, imageResponse]) => {
+        // Process videos
+        const videoResults = videoResponse.data.results;
+        setVideos(videoResults.length > 0 ? videoResults : "");
+        console.log("Videos from TMDB:", videoResults);
+
+        // Process images
+        console.log("Full Image API Response:", imageResponse.data);
+        
+        const backdrops = imageResponse.data.backdrops || [];
+        const posters = imageResponse.data.posters || [];
+        
+        const imageResults = [...backdrops, ...posters];
+        
+        console.log("Image Results:", imageResults);
+        
+        setPhotos(imageResults.length > 0 ? imageResults : "");
+      })
+      .catch((error) => console.log(error));
+  }
+}, [movieId]);
 
   const handlePrevPage = () => {
     if (currentPage > 1) {
@@ -131,6 +365,7 @@ const [selectedVideo, setSelectedVideo] = useState([]); // State for the selecte
       });
     }
   };
+  
 
   return (
     <>
@@ -233,6 +468,76 @@ const [selectedVideo, setSelectedVideo] = useState([]); // State for the selecte
           </div>
         </div>
       </div>
+      {!movieId &&(
+        <>
+        {/* Show videos section */}
+      <div className="videosMainCont">
+          {videos && videos.length > 0 ? (
+            videos.map((video) => (
+              <div className="videosCont" key={video.id}>
+                <p>{video.name}</p>
+                <div className="videolist">
+                  <div className="video-preview">
+                    <iframe
+                      width="280"
+                      height="158"
+                      src={`https://www.youtube.com/embed/${video.key}`}
+                      title={video.name}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setSelectedVideo(video);
+                      alert("Successfully selected a video!");
+                    }}
+                  >
+                    Select Video
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No videos found</p>
+          )}
+        </div>
+        </>
+      )}
+
+{!movieId &&(
+
+<div className="imagesMainCont">
+  {selectedMovie ? (
+    photos && photos.length > 0 ? (
+      photos.map((image) => (
+        <div className="imagesCont" key={image.file_path}>
+          <div className="image-preview">
+            <img
+              src={`https://image.tmdb.org/t/p/w500/${image.file_path}`}
+              alt="Movie Scene"
+              width="200"
+            />
+          </div>
+          <button
+            onClick={() => {
+              setSelectedPhoto(image);
+              alert("Successfully selected an image!");
+            }}
+          >
+            Select Image
+          </button>
+        </div>
+      ))
+    ) : (
+      <p>No images found for this movie</p>
+    )
+  ) : (
+    <p>Select a movie to view available images</p>
+  )}
+</div>
+)}
 
       {movieId && (
   <div>
@@ -262,7 +567,7 @@ const [selectedVideo, setSelectedVideo] = useState([]); // State for the selecte
         </li>
       </ul>
     </nav>
-    <Outlet context={{ videos, setSelectedVideo }} />
+    <Outlet context={{ videos, setSelectedVideo, handleAddVideo, selectedMovie, handleAddPhoto }} />
   </div>
 )}
 

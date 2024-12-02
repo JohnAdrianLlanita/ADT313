@@ -1,32 +1,42 @@
-import { useEffect } from 'react';
-import { useMovieContext } from '../../../../context/MovieContext';
-import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
-import './View.css';
+import React, { useEffect, useState } from "react"; // Add useState to the import
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
+import Photos from "../../../../pages/Main/Movie/Form/Photos";
+import "./View.css";
 
-function View() {
-  const { movie, setMovie } = useMovieContext();
+function View({ setSelectedMovie }) {
+  const [movie, setMovie] = useState(null); // Local state for movie
   const { movieId } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (movieId !== undefined) {
+    if (movieId) {
       axios
         .get(`/movies/${movieId}`)
         .then((response) => {
-          setMovie(response.data);
+          const movieData = response.data;
+
+          // Transform movie data if necessary to match earlier structure
+          const transformedMovie = {
+            ...movieData,
+            videos: movieData.videos || [],
+            photos: movieData.photos || [],
+            casts: movieData.casts || [],
+          };
+
+          setMovie(transformedMovie);
+          setSelectedMovie?.(transformedMovie); // Update selectedMovie if needed in the parent
         })
-        .catch((e) => {
-          console.log(e);
-          navigate('/');
+        .catch((error) => {
+          console.error("Error fetching movie data:", error);
+          navigate("/"); // Redirect to homepage if fetching fails
         });
     }
-    return () => {};
-  }, [movieId]);
+  }, [movieId, navigate, setSelectedMovie]);
 
   return (
     <div className="movie-view">
-      {movie && (
+      {movie ? (
         <>
           <div className="banner">
             <img src={movie.posterPath} alt={movie.title} className="movie-poster" />
@@ -35,8 +45,6 @@ function View() {
               <p className="movie-overview">{movie.overview}</p>
             </div>
           </div>
-
-          {JSON.stringify(movie)}
 
           {movie.casts && movie.casts.length > 0 && (
             <div className="cast-crew">
@@ -51,9 +59,9 @@ function View() {
             </div>
           )}
 
-{movie.videos && movie.videos[0] ? (
+          {movie.videos && movie.videos.length > 0 && (
             <div className="video-preview">
-              {/* Assuming the video.key is the unique identifier for a YouTube video */}
+              <h2>Trailer</h2>
               <iframe
                 width="560"
                 height="315"
@@ -64,19 +72,28 @@ function View() {
                 allowFullScreen
               ></iframe>
             </div>
-          ) : null}
+          )}
+
+         
 
           {movie.photos && movie.photos.length > 0 && (
             <div className="movie-photos">
-              <h2>photos</h2>
+              <h2>Photos</h2>
               <div className="photo-gallery">
                 {movie.photos.map((photo, index) => (
-                  <img key={index} src={photo.url} alt={`Movie Photo ${index + 1}`} className="photo-item" />
+                  <img
+                    key={index}
+                    src={photo.url}
+                    alt={`Movie Photo ${index + 1}`}
+                    className="photo-item"
+                  />
                 ))}
               </div>
             </div>
           )}
         </>
+      ) : (
+        <p>Loading movie details...</p>
       )}
     </div>
   );
