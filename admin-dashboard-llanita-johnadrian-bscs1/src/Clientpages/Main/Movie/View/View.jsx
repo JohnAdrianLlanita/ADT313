@@ -8,6 +8,7 @@ function View({ setSelectedMovie }) {
   const [movie, setMovie] = useState(null); // Local state for movie
   const { movieId } = useParams();
   const navigate = useNavigate();
+  const [movieData, setMovieData] = useState(null);
 
   useEffect(() => {
     if (movieId) {
@@ -35,7 +36,17 @@ function View({ setSelectedMovie }) {
   }, [movieId, navigate, setSelectedMovie]);
 
   return (
-    <div className="movie-view">
+
+<div
+        className="movie-page-container"
+        style={{
+          backgroundColor: 'transparent', // Ensures transparency for the background color
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(https://image.tmdb.org/t/p/original/${movie?.posterPath})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      >
       {movie ? (
         <>
           <div className="banner">
@@ -52,7 +63,13 @@ function View({ setSelectedMovie }) {
               <ul>
                 {movie.casts.map((cast, index) => (
                   <li key={index} className="cast-member">
-                    <strong>{cast.name}</strong> as {cast.character}
+                    <strong>{cast.name}</strong> as {cast.characterName}
+
+                    <img
+                    src={cast.url}
+                    alt={`Movie Photo ${index + 1}`}
+                    className="photo-item"
+                  />
                   </li>
                 ))}
               </ul>
@@ -95,6 +112,7 @@ function View({ setSelectedMovie }) {
       ) : (
         <p>Loading movie details...</p>
       )}
+       
     </div>
   );
 }

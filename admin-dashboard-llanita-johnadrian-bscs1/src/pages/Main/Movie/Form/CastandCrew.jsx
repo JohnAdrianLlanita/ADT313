@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 const CastAndCrews = () => {
   const { movieId } = useParams(); 
   const [members, setMembers] = useState([]);
-  const [newMember, setNewMember] = useState({ name: "", role: "" });
+  const [newMember, setNewMember] = useState({ name: "", role: "", url: "" });
   const [loading, setLoading] = useState(false); // Track loading state
 
   console.log(members);
@@ -53,13 +53,22 @@ const CastAndCrews = () => {
       return;
     }
 
+    if (!newMember.url || !newMember.url) {
+      alert("Please provide a url.");
+      return;
+    }
+
     try {
       setLoading(true);
-      const data = { movieId, name: newMember.name, characterName: newMember.role };
+      const data = { 
+        movieId: movieId? movieId : "123", 
+        name: newMember.name, 
+        url: newMember.url,
+        characterName: newMember.role};
+
+      console.log("data", data)
       
-      console.log(data)
-      
-      const response = await axios.post("/credits", data, {
+      const response = await axios.post("/casts", data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
@@ -120,6 +129,13 @@ const CastAndCrews = () => {
           name="role"
           placeholder="Role"
           value={newMember.role}
+          onChange={handleInputChange}
+        />
+                <input
+          type="text"
+          name="url"
+          placeholder="Url"
+          value={newMember.url}
           onChange={handleInputChange}
         />
         <button onClick={addMember} disabled={loading}>

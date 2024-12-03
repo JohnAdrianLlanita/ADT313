@@ -11,11 +11,11 @@ const Form = () => {
   const [currentPage, setCurrentPage] = useState(1); 
   const [totalPages, setTotalPages] = useState(1); 
   const navigate = useNavigate();
-  const [videos, setVideos] = useState([]); // State for videos
-const [selectedVideo, setSelectedVideo] = useState([]); // State for the selected video
-const [photos, setPhotos] = useState([]);
-const [selectedPhoto, setSelectedPhoto] = useState([]);
-const [description, setDescription] = useState("");
+  const [videos, setVideos] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState([]);
+  const [photos, setPhotos] = useState([]);
+  const [selectedPhoto, setSelectedPhoto] = useState([]);
+  const [description, setDescription] = useState("");
 
   let { movieId } = useParams();
 
@@ -117,9 +117,8 @@ const [description, setDescription] = useState("");
         {
           headers: {
             Authorization:
-              "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNGJkNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI",
-            Accept: "application/json",
-          },
+            'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNGJkNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI',
+        },
         }
       )
       .then((response) => {
@@ -298,6 +297,7 @@ if (!isPhotoAdded) {
         };
         setSelectedMovie(tempData);
         fetchVideos(tempData.id)
+        fetchPhotos(tempData.id);
         
         const tmdbId = response.data.tmdbId;
           
@@ -318,7 +318,7 @@ if (!isPhotoAdded) {
               headers: {
                 Accept: "application/json",
                 Authorization:
-                  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI",
+                  "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI5YTdiNmUyNGJkNWRkNjhiNmE1ZWFjZjgyNWY3NGY5ZCIsIm5iZiI6MTcyOTI5NzI5Ny4wNzMzNTEsInN1YiI6IjY2MzhlZGM0MmZhZjRkMDEzMGM2NzM3NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.ZIX4EF2yAKl6NwhcmhZucxSQi1rJDZiGG80tDd6_9XI",
               },
             }
           )
@@ -567,7 +567,7 @@ if (!isPhotoAdded) {
         </li>
       </ul>
     </nav>
-    <Outlet context={{ videos, setSelectedVideo, handleAddVideo, selectedMovie, handleAddPhoto }} />
+    <Outlet context={{ videos, setSelectedVideo, handleAddVideo, selectedMovie, handleAddPhoto, photos, setSelectedPhoto }} />
   </div>
 )}
 

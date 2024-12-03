@@ -40,3 +40,84 @@
   width: 100%;
   padding: 2rem;
 }
+
+.search-container-home{
+  margin: 20px 0;
+  text-align: center;
+  color: mediumpurple;
+}
+
+.search-container-home input {
+  padding: 10px;
+  margin-right: 10px;
+  width: 200px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search-container-home button {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: mediumpurple;
+  color: #000;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.search-container-home button:hover {
+  background-color: darkslateblue;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination-container button {
+  padding: 10px 15px;
+  margin: 0 5px;
+  border: none;
+  border-radius: 5px;
+  background-color: mediumpurple;
+  color: black;
+  cursor: pointer;
+}
+.pagination-container button:hover {
+background-color: darkslateblue;
+transition: 0.3s ease;
+}
+
+.pagination-container button:disabled {
+  background-color: mediumpurple;
+  cursor: not-allowed;
+}
+
+.pagination-container span {
+  margin: 0 10px;
+  color: mediumpurple;
+}
+
+.top-movies-container {
+  margin: 20px 0;
+}
+
+.top-movies-container h2 {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: mediumpurple;
+}
+
+.movie-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+}
+.moviesign{
+  display: flex;
+  
+}
+

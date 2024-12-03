@@ -1,15 +1,37 @@
 .card {
   max-width: 180px;
-  border: 20px solid #898989;
-  background-color: #898989;
-  
+  border: 1px solid #444; /* Thin border for a sleeker look */
+  border-radius: 8px; /* Rounded corners for modern design */
+  background-color: #222; /* Darker background for a cinematic vibe */
+  color: #fff; /* White text for readability */
+  overflow: hidden; /* Prevent content overflow */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow effect */
+  transition: all 0.3s ease; /* Smooth transition for hover effect */
 }
+
 .card img {
-  max-width: 180px;
-  object-fit: contain;
+  max-width: 100%; /* Ensure the image fills the card width */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Ensure the image looks good in its container */
+  border-bottom: 2px solid #444; /* Separate the image and content */
 }
 
 .card:hover {
-  border: 20px solid #3f3f3f;
-  background-color: #3f3f3f;
+  border: 10px solid mediumpurple; /* IMDb signature yellow */
+  background-color: #333; /* Slightly lighter hover background */
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4); /* Enhance shadow on hover */
+}
+
+.card-title {
+  font-size: 16px; /* Moderate font size for the title */
+  font-weight: bold; /* Make the title stand out */
+  margin: 10px 8px 4px; /* Add spacing around the text */
+  text-align: center; /* Center-align the title */
+}
+
+.card-description {
+  font-size: 14px; /* Slightly smaller font for description */
+  margin: 0 8px 8px; /* Add padding inside the card */
+  text-align: center; /* Center-align text */
+  color: #ccc; /* Light gray for contrast */
 }
