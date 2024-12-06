@@ -1,0 +1,35 @@
+.cast-crew {
+    margin-top: 20px;
+  }
+  
+  .cast-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+  
+  .cast-member {
+    width: 150px;
+    text-align: center;
+  }
+  
+  .cast-photo {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  
+  .cast-info {
+    margin-top: 10px;
+  }
+  
+  .cast-name {
+    font-weight: bold;
+  }
+  
+  .cast-role {
+    color: gray;
+    font-size: 14px;
+  }
+  

@@ -147,6 +147,7 @@ const Form = () => {
         const crew = castAndCrew.crew || [];
         setCast(cast);
         setCrew(crew);
+        console.log(cast)
       })
       .catch((error) => {
         console.error("Error fetching cast and crew:", error);
@@ -344,21 +345,14 @@ const Form = () => {
       // Add video
       const isVideoAdded = await handleAddVideo(newMovieId);
       if (!isVideoAdded) {
-        alert("Video could not be added. Please try again.");
+        alert("Please add or edit a Video.");
         return;
       }
   
       // Add photos
       const isPhotoAdded = await handleAddPhoto(newMovieId);
       if (!isPhotoAdded) {
-        alert("Photo could not be added. Please try again.");
-        return;
-      }
-  
-      // Add cast and crew
-      const isCastAndCrewAdded = await handleAddCastAndCrew(newMovieId);
-      if (!isCastAndCrewAdded) {
-        alert("Cast and Crew could not be added. Please try again.");
+        alert("Please add Photo.");
         return;
       }
   
@@ -448,7 +442,7 @@ const Form = () => {
         const crewResults = creditsResponse.data.crew || [];
         setCast(castResults.length > 0 ? castResults : []);
         setCrew(crewResults.length > 0 ? crewResults : []);
-        console.log("Cast from TMDB:", castResults);
+        console.log("Cast from TMDB:", castResults.length > 0 ? castResults : []);
         console.log("Crew from TMDB:", crewResults);
       })
       .catch((error) => console.log(error));

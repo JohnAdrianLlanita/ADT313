@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { useOutletContext } from 'react-router-dom';
+import './CAC.css'
 
 const CastAndCrews = () => {
   const { movieId } = useParams();
   const [members, setMembers] = useState([]);
   const [newMember, setNewMember] = useState({ name: "", role: "", url: "" });
   const [loading, setLoading] = useState(false);
+  const {cast, setCast, crew, setCrew, handleAddCastAndCrew} = useOutletContext();
 
   useEffect(() => {
     if (!movieId) return;
@@ -15,6 +18,7 @@ const CastAndCrews = () => {
       try {
         setLoading(true);
         const response = await axios.get(`/credits?movieId=${movieId}`);
+        console.log("Fetched members:", response.data); 
         setMembers(response.data);
       } catch (error) {
         console.error("Error fetching cast & crew:", error);
@@ -26,13 +30,15 @@ const CastAndCrews = () => {
     fetchMembers();
   }, [movieId]);
   
+  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewMember({ ...newMember, [name]: value });
   };
 
-  // Add a new member
+  // Add a new member ----------
+  
   const addMember = async () => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
@@ -70,6 +76,8 @@ const CastAndCrews = () => {
       setLoading(false);
     }
   };
+
+  //modify this code so that for each cast, insert them into casts database, also add a a button to save it
 
   // Delete a member
   const deleteMember = async (id) => {
@@ -131,34 +139,60 @@ const CastAndCrews = () => {
       ) : members.length > 0 ? (
         <ul style={{ listStyleType: "none", padding: 0 }}>
           {members.map((member) => (
-            <li
-              key={member.id}
-              style={{
-                borderBottom: "1px solid #ccc",
-                padding: "10px 0",
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <div>
-                <strong>{member.name}</strong> - {member.role} <br />
-                <a href={member.url} target="_blank" rel="noopener noreferrer">
-                  Profile
-                </a>
-              </div>
-              <button
-                onClick={() => deleteMember(member.id)}
-                disabled={loading}
-              >
-                Delete
-              </button>
-            </li>
-          ))}
+  <li
+    key={member.id}
+    style={{
+      borderBottom: "1px solid #ccc",
+      padding: "10px 0",
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    }}
+  >
+    <div>
+      <strong>{member.name}</strong> - {member.role} <br />
+      <a href={member.url} target="_blank" rel="noopener noreferrer">
+        Profile
+      </a>
+    </div>
+    <button
+      onClick={() => deleteMember(member.id)}
+      disabled={loading}
+    >
+      Delete
+    </button>
+  </li>
+))}
+
+
+
         </ul>
       ) : (
         <p>No cast or crew members added yet.</p>
       )}
+
+<div className="cast-crew">
+  <h2>Cast & Crew</h2>
+  <div className="cast-list">
+    {cast.map((member) => (
+      <div key={member.id} className="cast-member">
+        <img
+          src={`https://image.tmdb.org/t/p/w185${member.profile_path}`}
+          alt={`Photo of ${member.name}`}
+          className="cast-photo"
+          onError={(e) => (e.target.style.display = "none")} // Handle missing images gracefully
+        />
+        <div className="cast-info">
+          <p className="cast-name">
+            <strong>{member.name}</strong>
+          </p>
+          <p className="cast-role">as {member.character || "Unknown Role"}</p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
     </div>
   );
 };

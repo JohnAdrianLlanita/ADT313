@@ -16,7 +16,7 @@
 }
 .MainClient .container .navigation {
   height: 80px;
-  background-color: mediumpurple;
+  background-color: rgb(0, 0, 0);
   width: 100%;
 }
 .MainClient .container .navigation ul {
@@ -35,13 +35,13 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #000000;
+  color: mediumpurple;
   font-weight: bold;
   cursor: pointer;
 }
 .MainClient .container .navigation ul li a {
   text-decoration: none;
-  color: #000000;
+  color: mediumpurple;
   font-weight: bold;
   font-size: 2rem;
 }

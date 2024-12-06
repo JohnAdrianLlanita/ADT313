@@ -56,6 +56,7 @@ function View({ setSelectedMovie }) {
               <p className="movie-overview">{movie.overview}</p>
             </div>
           </div>
+          
 
           {movie.casts && movie.casts.length > 0 && (
             <div className="cast-crew">

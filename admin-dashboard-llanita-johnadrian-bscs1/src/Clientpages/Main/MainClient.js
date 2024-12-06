@@ -23,6 +23,9 @@ function MainClient() {
       <div className='container'>
         <div className='navigation'>
           <ul>
+          <a className='title'>
+              Cinephora
+              </a>
             <li>
               <a onClick={() => navigate('/')}>Movies</a>
             </li>
