@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from 'react-router-dom';
-import './Movie.css'; // Ensure you add your styling here
+import './Movie.css';
 import { useEffect, useState } from 'react';
 import MovieGenres from '../../../components/MovieCards/MovieGenres';
 
@@ -15,7 +15,7 @@ const Movie = () => {
       <div
         className="movie-page-container"
         style={{
-          backgroundColor: 'transparent', // Ensures transparency for the background color
+          backgroundColor: 'transparent',
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(https://image.tmdb.org/t/p/original/${movieData?.posterPath})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',

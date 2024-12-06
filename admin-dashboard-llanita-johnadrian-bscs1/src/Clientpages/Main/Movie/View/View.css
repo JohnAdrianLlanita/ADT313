@@ -36,43 +36,97 @@
     line-height: 1.6;
   }
   
-  .cast-crew,
-  .movie-videos,
-  .movie-photos {
-    margin-top: 30px;
-  }
-  
   h2 {
     font-size: 1.8rem;
     margin-bottom: 15px;
     color: mediumpurple;
   }
   
+  .cast-crew {
+    margin-top: 30px;
+  }
+  
+  .cast-crew h2 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: mediumpurple;
+    text-align: center;
+  }
+  
+  .cast-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
   .cast-member {
-    font-size: 1.2rem;
-    margin: 5px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 150px;
+    font-size: 1rem;
     color: #bbb;
   }
   
-  .movie-videos iframe {
-    width: 100%;
-    max-width: 600px;
-    height: 350px;
-    margin-bottom: 20px;
+  .cast-photo {
+    border: 2px solid mediumpurple;
     border-radius: 5px;
+    max-width: 150px;
+    max-height: 200px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+  }
+  .movie-videos {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .movie-videos h2 {
+    margin-bottom: 15px;
+    color: mediumpurple;
+  }
+  
+  .movie-videos iframe {
+    width: 90%;
+    max-width: 800px;
+    height: 450px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
   }
   
   .movie-photos {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
+    margin-top: 30px;
+  }
+  
+  .photo-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    
+  }
+  
+  .movie-photos h2 {
+    text-align: center;
+    margin-bottom: 15px;
+    color: mediumpurple;
   }
   
   .photo-item {
-    max-width: 200px;
-    max-height: 200px;
+    width: 150%;
+    height: 200px;
     object-fit: cover;
-    border-radius: 5px;
+    border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+    transition: transform 0.3s ease;
   }
+  
+  .photo-item:hover {
+    transform: scale(1.05);
+  }
+  
   

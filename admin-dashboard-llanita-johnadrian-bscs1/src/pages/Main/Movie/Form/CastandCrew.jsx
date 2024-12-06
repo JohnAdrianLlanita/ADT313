@@ -3,21 +3,18 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 
 const CastAndCrews = () => {
-  const { movieId } = useParams(); 
+  const { movieId } = useParams();
   const [members, setMembers] = useState([]);
   const [newMember, setNewMember] = useState({ name: "", role: "", url: "" });
-  const [loading, setLoading] = useState(false); // Track loading state
+  const [loading, setLoading] = useState(false);
 
-  console.log(members);
-
-  // Fetch existing members
   useEffect(() => {
     if (!movieId) return;
-
+  
     const fetchMembers = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`/credits`);
+        const response = await axios.get(`/credits?movieId=${movieId}`);
         setMembers(response.data);
       } catch (error) {
         console.error("Error fetching cast & crew:", error);
@@ -25,11 +22,11 @@ const CastAndCrews = () => {
         setLoading(false);
       }
     };
-
+  
     fetchMembers();
   }, [movieId]);
+  
 
-  // Handle input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewMember({ ...newMember, [name]: value });
@@ -43,40 +40,28 @@ const CastAndCrews = () => {
       return;
     }
 
-    if (!movieId) {
-      alert("Please select a movie.");
-      return;
-    }
-
-    if (!newMember.name || !newMember.role) {
-      alert("Please provide both name and role.");
-      return;
-    }
-
-    if (!newMember.url || !newMember.url) {
-      alert("Please provide a url.");
+    if (!newMember.name || !newMember.role || !newMember.url) {
+      alert("Please provide all required fields (name, role, and URL).");
       return;
     }
 
     try {
       setLoading(true);
-      const data = { 
-        movieId: movieId? movieId : "123", 
-        name: newMember.name, 
+      const data = {
+        movieId: movieId || "123",
+        name: newMember.name,
+        characterName: newMember.role,
         url: newMember.url,
-        characterName: newMember.role};
+      };
 
-      console.log("data", data)
-      
       const response = await axios.post("/casts", data, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-    
-      console.log("New member added:", response); // Log the API response
-      setMembers([...members, response.data]); // Append the full cast record
-      setNewMember({ name: "", role: "" }); // Reset the input fields
+
+      setMembers([...members, response.data]);
+      setNewMember({ name: "", role: "", url: "" });
       alert("Member added successfully!");
     } catch (error) {
       console.error("Error adding member:", error);
@@ -84,7 +69,6 @@ const CastAndCrews = () => {
     } finally {
       setLoading(false);
     }
-    
   };
 
   // Delete a member
@@ -116,7 +100,7 @@ const CastAndCrews = () => {
   return (
     <div>
       <h2>Cast & Crew</h2>
-      <div>
+      <div style={{ marginBottom: "20px" }}>
         <input
           type="text"
           name="name"
@@ -131,32 +115,50 @@ const CastAndCrews = () => {
           value={newMember.role}
           onChange={handleInputChange}
         />
-                <input
+        <input
           type="text"
           name="url"
-          placeholder="Url"
+          placeholder="Profile URL"
           value={newMember.url}
           onChange={handleInputChange}
         />
         <button onClick={addMember} disabled={loading}>
-          {loading ? "Adding..." : "Add"}
+          {loading ? "Adding..." : "Add Member"}
         </button>
       </div>
-      {loading && <p>Loading...</p>}
-      <ul>
-        {members.length > 0 ? (
-          members.map((member) => (
-            <li key={member.id}>
-              {member.name} - {member.role}
-              <button onClick={() => deleteMember(member.id)} disabled={loading}>
+      {loading ? (
+        <p>Loading...</p>
+      ) : members.length > 0 ? (
+        <ul style={{ listStyleType: "none", padding: 0 }}>
+          {members.map((member) => (
+            <li
+              key={member.id}
+              style={{
+                borderBottom: "1px solid #ccc",
+                padding: "10px 0",
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <div>
+                <strong>{member.name}</strong> - {member.role} <br />
+                <a href={member.url} target="_blank" rel="noopener noreferrer">
+                  Profile
+                </a>
+              </div>
+              <button
+                onClick={() => deleteMember(member.id)}
+                disabled={loading}
+              >
                 Delete
               </button>
             </li>
-          ))
-        ) : (
-          <p>No cast or crew members added yet.</p>
-        )}
-      </ul>
+          ))}
+        </ul>
+      ) : (
+        <p>No cast or crew members added yet.</p>
+      )}
     </div>
   );
 };

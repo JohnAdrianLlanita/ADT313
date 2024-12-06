@@ -11,12 +11,10 @@ const Lists = () => {
   const { setMovieData } = useOutletContext();
 
   const updateMovieData = (movie) => {
-    // Update the movie data
     setMovieData(movie);
   };
 
   const getMovies = () => {
-    //get the movies from the api or database
     axios.get('/movies').then((response) => {
       console.log(response)
       setLists(response.data);
@@ -38,7 +36,6 @@ const Lists = () => {
           },
         })
         .then(() => {
-          //update list by modifying the movie list array
           const tempLists = [...lists];
           const index = lists.findIndex((movie) => movie.id === id);
           if (index !== undefined || index !== -1) {
@@ -46,8 +43,7 @@ const Lists = () => {
             setLists(tempLists);
           }
 
-          //update list by requesting again to api
-          // getMovies();
+         
         });
     }
   };
@@ -88,7 +84,7 @@ const Lists = () => {
                       className='editbutton'
                       type='button'
                       onClick={(e) => {
-                        e.stopPropagation(); // Prevent the row click from triggering
+                        e.stopPropagation();
                         navigate(`/main/movies/form/${movie.id}`);
                       }}
                     >
@@ -98,22 +94,13 @@ const Lists = () => {
                       className='deletebutton'
                       type='button'
                       onClick={(e) => {
-                        e.stopPropagation(); // Prevent the row click from triggering
+                        e.stopPropagation();
                         handleDelete(movie.id);
                       }}
                     >
                       Delete
                     </button>
-                    <button
-                      className='castcrewbutton'
-                      type='button'
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent the row click from triggering
-                        navigate(`${movie.id}/cast-and-crews`);
-                      }}
-                    >
-                      View Cast & Crew
-                    </button>
+                    
                   </td>
                 </tr>
               ))}

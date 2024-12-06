@@ -21,7 +21,7 @@ const Photos = () => {
                   <img
                     width="280"
                     height="158"
-                    src={`https://image.tmdb.org/t/p/w500${photo.file_path}`}  // Using the file path to display the image
+                    src={`https://image.tmdb.org/t/p/w500${photo.file_path}`}
                     alt={photo.file_path}
                   />
                 </div>

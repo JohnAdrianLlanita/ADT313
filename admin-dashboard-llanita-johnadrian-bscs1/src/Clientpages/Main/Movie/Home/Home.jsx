@@ -10,14 +10,14 @@ const Home = () => {
   const [featuredMovie, setFeaturedMovie] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [moviesPerPage] = useState(7); // Adjust number of movies per page here
-  const [sortOrder, setSortOrder] = useState('asc'); // Default sort order
+  const [moviesPerPage] = useState(7); 
+  const [sortOrder, setSortOrder] = useState('asc'); 
   const [topMovies, setTopMovies] = useState([]);
 
   const { movieList, setMovieList, setMovie } = useMovieContext();
 
   const getMovies = () => {
-    // Fetch all movies
+   
     axios
       .get('/movies')
       .then((response) => {
@@ -53,7 +53,7 @@ const Home = () => {
     }, 5000);
   }, [featuredMovie]);
 
-  // Filter and sort movies
+  
   const filteredMovies = movieList
     .filter((movie) =>
       movie.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -63,7 +63,7 @@ const Home = () => {
       else return b.title.localeCompare(a.title);
     });
 
-  // Pagination logic
+  
   const indexOfLastMovie = currentPage * moviesPerPage;
   const indexOfFirstMovie = indexOfLastMovie - moviesPerPage;
   const currentMovies = filteredMovies.slice(

@@ -80,7 +80,7 @@
   border-radius: 10px;
   font-family: serif;
 
-  /* Animated gradient background */
+  
   background: linear-gradient(270deg, purple,darkslateblue,blueviolet,darkorchid, darkorchid,blueviolet ,darkslateblue,purple);
   background-size: 400% 400%;
   animation: gradientAnimation 6s ease infinite;

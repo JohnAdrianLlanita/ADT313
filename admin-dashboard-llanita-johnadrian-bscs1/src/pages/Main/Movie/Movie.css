@@ -1,4 +1,4 @@
-/* Container for the entire movie page */
+
 .movie-page-container {
   font-family: Arial, sans-serif;
   color: #ccc;
@@ -6,23 +6,22 @@
   width: 100%;
 }
 
-/* Header: Poster + Movie Details */
 .movie-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  background-color: transparent; /* Transparent to show background */
+  background-color: transparent; 
   padding: 20px;
   color: rgb(255, 255, 255);
 }
 
 .poster-container {
-  flex: 0 0 300px; /* Fixed size for poster */
+  flex: 0 0 300px;
 }
 
 .poster-image {
   width: 100%;
-  height: 450px; /* Adjust the height for better visibility */
+  height: 450px; 
   object-fit: cover;
   border-radius: 8px;
 }
@@ -66,7 +65,7 @@
   color: #ffffff;
 }
 
-/* Movie Overview Section */
+
 .movie-overview {
   background-color: rgba(0, 0, 0, 0.6);
   padding: 20px;
@@ -84,7 +83,7 @@ font-size: 40px;
   color: white;
 }
 
-/* Navigation Tabs (Cast, Videos, Photos) */
+
 .movie-navigation {
   background-color: #222;
   color: white;
@@ -111,7 +110,7 @@ font-size: 40px;
   color: #222;
 }
 
-/* Responsive Design for smaller screens */
+
 @media (max-width: 768px) {
   .movie-header {
       flex-direction: column;
