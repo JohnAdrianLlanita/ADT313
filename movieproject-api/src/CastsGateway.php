@@ -26,19 +26,28 @@ class CastsGateway
 
     public function create(array $data): string
     {
-        $sql = "INSERT INTO casts (movieId, userId, name, url, characterName) 
-                VALUES (:movieId, :userId, :name, :url, :characterName)";
-        $res = $this->conn->prepare($sql);
-
-        $res->bindValue(":userId",$data["userId"], PDO::PARAM_INT);
-        $res->bindValue(":movieId",$data["movieId"], PDO::PARAM_INT);
-        $res->bindValue(":name",$data["name"], PDO::PARAM_STR);
-        $res->bindValue(":url",$data["url"], PDO::PARAM_STR);
-        $res->bindValue(":characterName",$data["characterName"], PDO::PARAM_STR);
-
-        $res->execute();
-        return $this->conn->lastInsertId();
+        try {
+            $sql = "INSERT INTO casts (movieId, userId, name, url, characterName) 
+                    VALUES (:movieId, :userId, :name, :url, :characterName)";
+            $res = $this->conn->prepare($sql);
+    
+            $res->bindValue(":movieId", $data["movieId"], PDO::PARAM_INT);
+            $res->bindValue(":userId", $data["userId"], PDO::PARAM_INT);
+            $res->bindValue(":name", $data["name"], PDO::PARAM_STR);
+            $res->bindValue(":url", $data["url"], PDO::PARAM_STR);
+            $res->bindValue(":characterName", $data["characterName"], PDO::PARAM_STR);
+    
+            $res->execute();
+    
+            // Return the last inserted ID
+            return $this->conn->lastInsertId();
+        } catch (PDOException $e) {
+            // Log the error and throw an exception
+            error_log($e->getMessage());
+            throw new Exception("Failed to insert data into casts table.");
+        }
     }
+    
 
     public function get(string $id)
     {

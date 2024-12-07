@@ -24,7 +24,7 @@ class AdminGateway
         $res->bindValue(":middleName", $data["middleName"], PDO::PARAM_STR);
         $res->bindValue(":lastName", $data["lastName"], PDO::PARAM_STR);
         $res->bindValue(":contactNo", $data["contactNo"], PDO::PARAM_STR);
-        $res->bindValue(":role", 'admin', PDO::PARAM_STR);
+        $res->bindValue(":role", 'user', PDO::PARAM_STR);
 
         //execute the SQL query
         $res->execute();

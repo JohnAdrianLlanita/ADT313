@@ -39,43 +39,42 @@ class PhotosGateway
         return $this->conn->lastInsertId();
     }
 
-    public function get(string $id)
+    public function get(string $movieId)
     {
-        $sql = "SELECT * FROM photos WHERE id = :id";
+        $sql = "SELECT * FROM photos WHERE movieId = :movieId LIMIT 1";
         $res = $this->conn->prepare($sql);
-        $res->bindValue(":id", $id, PDO::PARAM_INT);
+        $res->bindValue(":movieId", $movieId, PDO::PARAM_INT);
         $res->execute();
-        $data = $res->fetch(PDO::FETCH_ASSOC);
-
-        return $data;
+        return $res->fetch(PDO::FETCH_ASSOC);
     }
 
     public function update(array $current, array $new): int
     {
-        $sql = "UPDATE photos SET movieId=:movieId, userId=:userId, url=:url, description=:description WHERE id =:id AND userId = :userId";
+        $sql = "UPDATE photos 
+                SET movieId = :movieId, 
+                    url = :url, 
+                    description = :description 
+                WHERE movieId=:id";
         $res = $this->conn->prepare($sql);
-        $dateUpdated = (new DateTime())->getTimeStamp();
-        $res->bindValue(":userId",$current["userId"], PDO::PARAM_INT);
-        $res->bindValue(":movieId",$new["movieId"] ?? $current["movieId"], PDO::PARAM_INT);
-        $res->bindValue(":url",$new["url"] ?? $current["url"], PDO::PARAM_STR);
-        $res->bindValue(":description",$new["description"] ?? $current["description"], PDO::PARAM_STR);
-        $res->bindValue(":dateUpdated",$dateUpdated, PDO::PARAM_STR);
-        $res->bindValue(":id", $current["id"], PDO::PARAM_INT);
-
+    
+        $res->bindValue(":movieId", $new["movieId"] ?? $current["movieId"], PDO::PARAM_INT);
+        $res->bindValue(":url", $new["url"] ?? $current["url"], PDO::PARAM_STR);
+        $res->bindValue(":description", $new["description"] ?? $current["description"], PDO::PARAM_STR);
+        $res->bindValue(":id", $current["movieId"], PDO::PARAM_INT);  // Using the photo's id, not movieId
+    
         $res->execute();
-
+    
         return $res->rowCount();
     }
 
-    public function delete(string $id, string $userId): int
+    public function delete(string $id): int  // Removed userId parameter as it's not used
     {
-        $sql = "DELETE FROM photos WHERE id = :id AND userId = :userId";
+        $sql = "DELETE FROM photos WHERE movieId=:id";  // Changed movieId to id
         $res = $this->conn->prepare($sql);
         $res->bindValue(":id", $id, PDO::PARAM_INT);
-        $res->bindValue(":userId", $userId, PDO::PARAM_INT);
-
+    
         $res->execute();
-
+    
         return $res->rowCount();
     }
 }

@@ -93,20 +93,21 @@ class VideosGateway
 
     public function update(array $current, array $new): int
     {
-        $sql = "UPDATE videos SET movieId=:movieId, userId=:userId, url=:url, name=:name, site=:site, videoKey=:videoKey, type=:type, official=:official WHERE id =:id AND userId = :userId";
+        $sql = "UPDATE videos SET movieId=:movieId, dateUpdated=:dateUpdated, url=:url, name=:name, site=:site, videoKey=:videoKey, videoType=:videoType, official=:official WHERE movieId =:id";
         $res = $this->conn->prepare($sql);
         $dateUpdated = (new DateTime())->getTimeStamp();
-        $res->bindValue(":userId",$current["userId"], PDO::PARAM_INT);
         $res->bindValue(":movieId",$new["movieId"] ?? $current["movieId"], PDO::PARAM_INT);
         $res->bindValue(":url",$new["url"] ?? $current["url"], PDO::PARAM_STR);
+        $res->bindValue(":videoType",$new["videoType"] ?? $current["videoType"], PDO::PARAM_STR);
         $res->bindValue(":name",$new["name"] ?? $current["name"], PDO::PARAM_STR);
         $res->bindValue(":site",$new["site"] ?? $current["site"], PDO::PARAM_STR);
-        $res->bindValue(":videoKey",$new["key"] ?? $current["videoKey"], PDO::PARAM_STR);
+        $res->bindValue(":videoKey",$new["videoKey"] ?? $current["videoKey"], PDO::PARAM_STR);
+        
         $res->bindValue(":videoType",$new["videoType"] ?? $current["videoType"], PDO::PARAM_STR);
         $res->bindValue(":official",$new["official"] ?? $current["official"], PDO::PARAM_INT);
 
         $res->bindValue(":dateUpdated",$dateUpdated, PDO::PARAM_STR);
-        $res->bindValue(":id", $current["id"], PDO::PARAM_INT);
+        $res->bindValue(":id", $new["movieId"], PDO::PARAM_INT);
 
         $res->execute();
 
@@ -115,10 +116,10 @@ class VideosGateway
 
     public function delete(string $id, string $userId): int
     {
-        $sql = "DELETE FROM videos WHERE id = :id AND userId = :userId";
+        $sql = "DELETE FROM videos WHERE movieId = :id";
         $res = $this->conn->prepare($sql);
         $res->bindValue(":id", $id, PDO::PARAM_INT);
-        $res->bindValue(":userId", $userId, PDO::PARAM_INT);
+        // $res->bindValue(":userId", $userId, PDO::PARAM_INT);
 
         $res->execute();
 
