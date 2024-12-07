@@ -84,7 +84,7 @@
     width: 100%; 
     box-sizing: border-box;
     background-color: whitesmoke; 
-    color: #fff;
+    color: black;
     transition: border 0.3s ease, background-color 0.3s ease;
 }
 
@@ -92,6 +92,7 @@
     border-color: mediumpurple;
     outline: none;
     background-color: #333; 
+    color:#fff
 }
 
 .Register-submit-container {
