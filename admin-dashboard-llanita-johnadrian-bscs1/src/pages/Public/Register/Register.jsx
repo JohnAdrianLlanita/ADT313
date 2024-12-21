@@ -163,10 +163,16 @@ function Register() {
                 <div className="Register-form-group">
                   <label>Contact No:</label>
                   <input
-                    placeholder="09XXXXXXXXXX"
+                    placeholder="XXXXXXXXXXXX"
                     type="text"
                     ref={contactNoRef}
-                    onChange={(e) => handleOnChange(e, "contactNo")}
+                    maxLength="11"
+                    onChange={(e) => {
+                      let value = e.target.value;
+                      value = value.replace(/[^0-9]/g, "");
+                      e.target.value = value;
+                      handleOnChange({ target: { value } }, "contactNo");
+                    }}
                   />
                 </div>
                 {isFieldsDirty && contactNo === "" && (

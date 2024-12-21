@@ -21,14 +21,14 @@ const handleSelectCastMember = async (member) => {
  
   try {
     const data = {
-      movieId: Number(movieId), // Convert to number since it's PARAM_INT in PHP
-      userId: localStorage.getItem("userId"), // Add userId from localStorage
+      movieId: Number(movieId),
+      userId: localStorage.getItem("userId"), 
       name: member.name,
       characterName: member.character || "Unknown Role",
       url: `https://image.tmdb.org/t/p/w185${member.profile_path}`
     };
  
-    console.log("Sending data:", data); // For debugging
+    console.log("Sending data:", data); 
  
     const response = await axios.post("/casts", data, {
       headers: {
@@ -36,10 +36,10 @@ const handleSelectCastMember = async (member) => {
       },
     });
  
-    console.log("Response:", response.data); // For debugging
+    console.log("Response:", response.data); 
     alert(`Successfully added ${member.name} to the database.`);
   } catch (error) {
-    console.error("Error adding cast member:", error.response?.data || error); // Log full error
+    console.error("Error adding cast member:", error.response?.data || error); 
     alert(`Failed to add ${member.name}. Error: ${error.response?.data?.message || 'Please try again.'}`);
   }
 };
@@ -69,7 +69,7 @@ const handleSelectCastMember = async (member) => {
     setNewMember({ ...newMember, [name]: value });
   };
 
-  // Add a new member
+  
   const addMember = async () => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
@@ -108,7 +108,7 @@ const handleSelectCastMember = async (member) => {
     }
   };
 
-  // Save all members to database
+  
   const saveAllMembers = async () => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
@@ -137,7 +137,7 @@ const handleSelectCastMember = async (member) => {
     }
   };
 
-  // Delete a member
+  
   const deleteMember = async (id) => {
     const accessToken = localStorage.getItem("accessToken");
     if (!accessToken) {
@@ -175,7 +175,7 @@ const handleSelectCastMember = async (member) => {
           src={`https://image.tmdb.org/t/p/w185${member.profile_path}`}
           alt={`Photo of ${member.name}`}
           className="cast-photo"
-          onError={(e) => (e.target.style.display = "none")} // Handle missing images gracefully
+          onError={(e) => (e.target.style.display = "none")}
         />
         <div className="cast-info">
           <p className="cast-name">

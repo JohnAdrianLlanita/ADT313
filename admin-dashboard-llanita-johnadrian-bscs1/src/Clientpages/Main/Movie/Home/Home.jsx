@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import MovieCards from '../../../../components/MovieCards/MovieCards';
 import { useMovieContext } from '../../../../context/MovieContext';

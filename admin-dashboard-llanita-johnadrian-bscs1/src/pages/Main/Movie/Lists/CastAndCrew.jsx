@@ -3,13 +3,13 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export const CastAndCrew = () => {
-  const { movieId } = useParams(); // Get the movie ID from the URL
+  const { movieId } = useParams(); 
   const [castAndCrew, setCastAndCrew] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Fetch cast and crew data
+    
     const fetchCastAndCrew = () => {
       axios.get('/credits')
         .then((response) => {
@@ -20,16 +20,16 @@ export const CastAndCrew = () => {
         });
     };
   
-    fetchCastAndCrew(); // Call the function to fetch data
+    fetchCastAndCrew(); 
   
   }, [movieId]);
 
   if (loading) {
-    return <div>Loading...</div>; // Show a loading message while data is being fetched
+    return <div>Loading...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>; // Show an error message if the fetch fails
+    return <div>Error: {error}</div>; 
   }
 
   return (
